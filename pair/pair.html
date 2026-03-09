@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QUEEN ABIMS - WhatsApp Linker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    :root { --primary: #00ff64; --bg: #0a0a0a; --surface: #111; --border: rgba(0,255,100,0.15); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; }
+    .container { width: 100%; max-width: 450px; background: var(--surface); border-radius: 16px; padding: 25px; box-shadow: 0 20px 60px rgba(0,255,100,0.08); border: 1px solid var(--border); }
+    .header { text-align: center; margin-bottom: 25px; }
+    .logo { width: 70px; height: 70px; margin: 0 auto 16px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #000; box-shadow: 0 0 30px rgba(0,255,100,0.3); }
+    .title { font-size: 24px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+    .subtitle { font-size: 14px; color: #888; margin-bottom: 20px; }
+    .social-icons { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
+    .social-icons a { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; text-decoration: none; transition: 0.3s; }
+    .social-icons a.youtube { background: #F00; } .social-icons a.telegram { background: #08c; } .social-icons a.whatsapp { background: #25D366; } .social-icons a.github { background: #333; }
+    .social-icons a:hover { transform: scale(1.1); }
+    .toggle-container { display: flex; margin-bottom: 20px; background: #1a1a1a; border-radius: 12px; padding: 4px; border: 1px solid var(--border); }
+    .toggle-option { flex: 1; padding: 10px; text-align: center; cursor: pointer; border-radius: 8px; font-size: 14px; font-weight: 500; transition: 0.3s; color: #aaa; }
+    .toggle-option.active { background: var(--primary); color: #000; }
+    .input-group { margin-bottom: 20px; } .input-group.hidden { display: none; }
+    .input-label { display: block; margin-bottom: 8px; font-size: 13px; color: #aaa; }
+    .input-field { width: 100%; padding: 12px; border: 1.5px solid var(--border); border-radius: 12px; background: #1a1a1a; color: #fff; font-size: 15px; }
+    .input-field:focus { outline: none; border-color: var(--primary); }
+    .btn { width: 100%; padding: 12px; background: var(--primary); border: none; border-radius: 12px; color: #000; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-bottom: 16px; }
+    .btn:hover { box-shadow: 0 4px 20px rgba(0,255,100,0.3); }
+    .btn.hidden { display: none; }
+    .copy-btn { width: 100%; padding: 12px; background: #1a1a1a; border: 1.5px solid var(--border); border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .code-display { background: #1a1a1a; padding: 12px; border-radius: 12px; text-align: center; font-size: 16px; font-weight: 600; margin-bottom: 16px; min-height: 40px; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
+    .qr-display { background: #1a1a1a; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 16px; border: 1.5px solid var(--border); display: none; }
+    .qr-image { max-width: 280px; margin: 0 auto 20px; border-radius: 12px; }
+    .success { color: var(--primary); } .error { color: #f44; }
+    .loading { display: none; text-align: center; margin: 16px 0; }
+    .loading i { font-size: 24px; color: var(--primary); animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #444; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">&#x1F451;</div>
+      <h1 class="title">QUEEN ABIMS</h1>
+      <p class="subtitle">Link your WhatsApp device</p>
+      <div class="social-icons">
+        <a href="https://youtube.com/@QueenAbims" target="_blank" class="youtube"><i class="fab fa-youtube"></i></a>
+        <a href="#" class="telegram"><i class="fab fa-telegram-plane"></i></a>
+        <a href="#" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+        <a href="#" class="github"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+    <div class="toggle-container">
+      <div class="toggle-option active" data-mode="pair"><i class="fas fa-key"></i> Pair Code</div>
+      <div class="toggle-option" data-mode="qr"><i class="fas fa-qrcode"></i> QR Code</div>
+    </div>
+    <div class="input-group" id="inputGroup">
+      <label class="input-label">WhatsApp number with country code (no +)</label>
+      <input type="text" id="num" class="input-field" placeholder="2348089336992" />
+    </div>
+    <button class="btn" id="submit"><i class="fas fa-key"></i> Generate Pair Code</button>
+    <div class="loading" id="loading"><i class="fas fa-spinner"></i></div>
+    <div class="code-display" id="codeDisplay">Your code will appear here</div>
+    <div class="qr-display" id="qrDisplay"><img id="qrImage" class="qr-image" src="" alt="QR"><div id="qrInfo" style="font-size:13px;color:#888">Scan with WhatsApp</div></div>
+    <button class="copy-btn" onclick="copyCode()"><i class="fas fa-copy"></i> Copy Code</button>
+    <div id="sessionSection" style="display:none;margin-top:16px">
+      <div style="background:#1a1a1a;padding:12px;border-radius:12px;text-align:center;font-size:13px;font-weight:600;margin-bottom:12px;border:1.5px solid var(--border)">
+        <div style="color:#888;margin-bottom:6px">🔑 Your Session ID:</div>
+        <div id="sessionIdDisplay" style="color:var(--primary);font-family:monospace;font-size:14px;word-break:break-all"></div>
+      </div>
+      <button class="copy-btn" id="copySessionBtn" onclick="copySessionId()"><i class="fas fa-copy"></i> Copy Session ID</button>
+      <p style="text-align:center;font-size:11px;color:#888;margin-top:8px">Save this as SESSION_ID in your .env file</p>
+    </div>
+    <div class="footer"><p>2025 QUEEN ABIMS | Baileys v7</p></div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+  <script>
+    var mode = 'pair';
+    var currentNumber = '';
+    var sessionPollTimer = null;
+
+    document.querySelectorAll('.toggle-option').forEach(function(o) {
+      o.addEventListener('click', function() {
+        if (this.dataset.mode === mode) return;
+        document.querySelectorAll('.toggle-option').forEach(function(x) { x.classList.remove('active'); });
+        this.classList.add('active');
+        mode = this.dataset.mode;
+        document.getElementById('submit').classList.toggle('hidden', mode === 'qr');
+        document.getElementById('inputGroup').classList.toggle('hidden', mode === 'qr');
+        document.getElementById('codeDisplay').innerHTML = 'Your code will appear here';
+        document.getElementById('qrDisplay').style.display = 'none';
+        document.getElementById('codeDisplay').style.display = 'flex';
+        document.getElementById('sessionSection').style.display = 'none';
+        if (sessionPollTimer) { clearInterval(sessionPollTimer); sessionPollTimer = null; }
+        if (mode === 'qr') genQR();
+      });
+    });
+    function genQR() {
+      document.getElementById('loading').style.display = 'block';
+      axios('/qr').then(function(r) {
+        if (r.data.qr) { document.getElementById('qrImage').src = r.data.qr; document.getElementById('qrDisplay').style.display = 'block'; document.getElementById('codeDisplay').style.display = 'none'; }
+        document.getElementById('loading').style.display = 'none';
+      }).catch(function() { document.getElementById('codeDisplay').innerHTML = '<span class="error">Error</span>'; document.getElementById('loading').style.display = 'none'; });
+    }
+    document.getElementById('submit').addEventListener('click', function() {
+      var n = document.getElementById('num').value.trim();
+      if (!n) { document.getElementById('codeDisplay').innerHTML = '<span class="error">Enter number</span>'; return; }
+      currentNumber = n.replace(/[^0-9]/g, '');
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('codeDisplay').innerHTML = '';
+      document.getElementById('sessionSection').style.display = 'none';
+      if (sessionPollTimer) { clearInterval(sessionPollTimer); sessionPollTimer = null; }
+      axios('/pair?number=' + currentNumber).then(function(r) {
+        var c = r.data.code || 'Unavailable';
+        document.getElementById('codeDisplay').innerHTML = c === 'Unavailable' ? '<span class="error">Unavailable</span>' : '<span class="success">CODE: ' + c + '</span>';
+        document.getElementById('loading').style.display = 'none';
+        // Start polling for session ID
+        if (c !== 'Unavailable') startSessionPoll();
+      }).catch(function() { document.getElementById('codeDisplay').innerHTML = '<span class="error">Error</span>'; document.getElementById('loading').style.display = 'none'; });
+    });
+    function startSessionPoll() {
+      var attempts = 0;
+      sessionPollTimer = setInterval(function() {
+        attempts++;
+        if (attempts > 60) { clearInterval(sessionPollTimer); sessionPollTimer = null; return; }
+        axios('/pair/session?number=' + currentNumber).then(function(r) {
+          if (r.data.sessionId) {
+            clearInterval(sessionPollTimer); sessionPollTimer = null;
+            document.getElementById('sessionSection').style.display = 'block';
+            document.getElementById('sessionIdDisplay').textContent = r.data.sessionId;
+            document.getElementById('codeDisplay').innerHTML = '<span class="success">✅ Linked Successfully!</span>';
+          }
+        }).catch(function() {});
+      }, 3000);
+    }
+    function copyCode() {
+      var t = document.getElementById('codeDisplay').innerText.replace('CODE: ', '');
+      navigator.clipboard.writeText(t).then(function() { var b = document.querySelector('.copy-btn'); b.innerHTML = '<i class="fas fa-check"></i> Copied!'; setTimeout(function() { b.innerHTML = '<i class="fas fa-copy"></i> Copy Code'; }, 2000); });
+    }
+    function copySessionId() {
+      var t = document.getElementById('sessionIdDisplay').textContent;
+      navigator.clipboard.writeText(t).then(function() { var b = document.getElementById('copySessionBtn'); b.innerHTML = '<i class="fas fa-check"></i> Copied!'; setTimeout(function() { b.innerHTML = '<i class="fas fa-copy"></i> Copy Session ID'; }, 2000); });
+    }
+  </script>
+</body>
+</html>

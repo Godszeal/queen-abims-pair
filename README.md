@@ -1,2 +1,3 @@
-# queen-abims-pair
-QUEEN ABIMS WhatsApp Bot - Auto-deployed from queen-abims.lovable.app
+# 👑 QUEEN ABIMS Pairing Site
+
+Auto-deployed from [QUEEN ABIMS](https://queen-abims.lovable.app)
